@@ -190,7 +190,7 @@ typedef Opcodes                 OpcodesList;
 #define TEAM_NEUTRAL            TEAM_INDEX_NEUTRAL
 
 
-#if (defined(TBC) || defined(WOTLK) || defined(CATA)) && !defined(MANGOS)
+#if defined(CATA) && !defined(MANGOS)
 #define PLAYER_FIELD_LIFETIME_HONORABLE_KILLS   PLAYER_FIELD_LIFETIME_HONORBALE_KILLS
 #endif
 
