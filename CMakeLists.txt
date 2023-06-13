@@ -3,6 +3,12 @@
 # This program is free software licensed under GPL version 3
 # Please see the included DOCS/LICENSE.md for more information
 #
+  
+  # Define Ike3 Bots ENABLE_PLAYERBOTS if need
+if (BUILD_IKE3_BOTS)
+  add_definitions(-DENABLE_PLAYERBOTS)
+endif()
+  
 
 if( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
 
@@ -58,6 +64,11 @@ if( ${CMAKE_PROJECT_NAME} STREQUAL "MaNGOS" )
     ${CMAKE_SOURCE_DIR}/src/game/WorldHandlers
     ${CMAKE_SOURCE_DIR}/src/game/Object
   )
+  
+  # Define Ike3 Bots ENABLE_PLAYERBOTS if need
+if (BUILD_IKE3_BOTS)
+  add_definitions(-DENABLE_PLAYERBOTS)
+endif()
   
   if( WIN32 )
     if ( MSVC )

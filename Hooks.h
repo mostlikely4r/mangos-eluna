@@ -73,6 +73,9 @@ namespace Hooks
         REGTYPE_PACKET,
         REGTYPE_SERVER,
         REGTYPE_PLAYER,
+#ifdef ENABLE_PLAYERBOTS
+        REGTYPE_PLAYERBOTAI,
+#endif //ENABLE_PLAYERBOTS
         REGTYPE_GUILD,
         REGTYPE_GROUP,
         REGTYPE_CREATURE,
@@ -207,6 +210,15 @@ namespace Hooks
 
         PLAYER_EVENT_COUNT
     };
+
+#ifdef ENABLE_PLAYERBOTS
+    enum PlayerbotAIEvents
+    {
+        PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,        // (event, player)
+
+        PLAYERBOTAI_EVENT_COUNT
+    };
+#endif //ENABLE_PLAYERBOTS
 
     enum GuildEvents
     {

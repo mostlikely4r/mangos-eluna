@@ -721,6 +721,32 @@ namespace LuaGlobalFunctions
         return RegisterEventHelper(L, Hooks::REGTYPE_PLAYER);
     }
 
+#ifdef ENABLE_PLAYERBOTS
+    /**
+      * Registers a [PlayerbotAI] event handler.
+      *
+      * <pre>
+      * enum PlayerEvents
+      * {
+      *     PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,        // (event, player)   
+      * };
+      * </pre>
+      *
+      * @proto cancel = (event, function)
+      * @proto cancel = (event, function, shots)
+      *
+      * @param uint32 event : [PlayerbotAI] event Id, refer to PlayerbotAIEvents above
+      * @param function function : function to register
+      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+      *
+      * @return function cancel : a function that cancels the binding when called
+      */
+    int RegisterPlayerbotAIEvent(lua_State* L)
+    {
+        return RegisterEventHelper(L, Hooks::REGTYPE_PLAYERBOTAI);
+    }
+#endif //ENABLE_PLAYERBOTS
+
     /**
      * Registers a [Guild] event handler.
      *
@@ -3139,6 +3165,35 @@ namespace LuaGlobalFunctions
         }
         return 0;
     }
+
+#ifdef ENABLE_PLAYERBOTS
+    /**
+     * Unbinds event handlers for either all [PlayerbotAI] events, or one type of [PlayerbotAI] event.
+     *
+     * If `event_type` is `nil`, all [PlayerbotAI] event handlers are cleared.
+     *
+     * Otherwise, only event handlers for `event_type` are cleared.
+     *
+     * @proto ()
+     * @proto (event_type)
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerbotAIEvent]
+     */
+    int ClearPlayerbotAIEvents(lua_State* L)
+    {
+        typedef EventKey<Hooks::PlayerbotAIEvents> Key;
+
+        if (lua_isnoneornil(L, 1))
+        {
+            Eluna::GetEluna(L)->PlayerbotAIEventBindings->Clear();
+        }
+        else
+        {
+            uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
+            Eluna::GetEluna(L)->PlayerbotAIEventBindings->Clear(Key((Hooks::PlayerbotAIEvents)event_type));
+        }
+        return 0;
+    }
+#endif //ENABLE_PLAYERBOTS
 
     /**
      * Unbinds event handlers for either all of a [Player]'s gossip events, or one type of event.

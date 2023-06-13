@@ -158,6 +158,7 @@ eventMgr(NULL),
 
 ServerEventBindings(NULL),
 PlayerEventBindings(NULL),
+PlayerbotAIEventBindings(NULL),
 GuildEventBindings(NULL),
 GroupEventBindings(NULL),
 VehicleEventBindings(NULL),
@@ -251,6 +252,7 @@ void Eluna::CreateBindStores()
 
     ServerEventBindings      = new BindingMap< EventKey<Hooks::ServerEvents> >(L);
     PlayerEventBindings      = new BindingMap< EventKey<Hooks::PlayerEvents> >(L);
+    PlayerbotAIEventBindings   = new BindingMap< EventKey<Hooks::PlayerbotAIEvents> >(L);
     GuildEventBindings       = new BindingMap< EventKey<Hooks::GuildEvents> >(L);
     GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
     VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
@@ -274,6 +276,7 @@ void Eluna::DestroyBindStores()
 {
     delete ServerEventBindings;
     delete PlayerEventBindings;
+    delete PlayerbotAIEventBindings;
     delete GuildEventBindings;
     delete GroupEventBindings;
     delete VehicleEventBindings;
@@ -294,6 +297,7 @@ void Eluna::DestroyBindStores()
 
     ServerEventBindings = NULL;
     PlayerEventBindings = NULL;
+    PlayerbotAIEventBindings = NULL;
     GuildEventBindings = NULL;
     GroupEventBindings = NULL;
     VehicleEventBindings = NULL;
@@ -966,6 +970,16 @@ int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, 
                 auto key = EventKey<Hooks::PlayerEvents>((Hooks::PlayerEvents)event_id);
                 bindingID = PlayerEventBindings->Insert(key, functionRef, shots);
                 createCancelCallback(L, bindingID, PlayerEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+
+        case Hooks::REGTYPE_PLAYERBOTAI:
+            if (event_id < Hooks::PLAYERBOTAI_EVENT_COUNT)
+            {
+                auto key = EventKey<Hooks::PlayerbotAIEvents>((Hooks::PlayerbotAIEvents)event_id);
+                bindingID = PlayerbotAIEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(L, bindingID, PlayerbotAIEventBindings);
                 return 1; // Stack: callback
             }
             break;

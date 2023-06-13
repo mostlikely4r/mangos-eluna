@@ -22,6 +22,9 @@ extern "C"
 #include "WorldObjectMethods.h"
 #include "UnitMethods.h"
 #include "PlayerMethods.h"
+#ifdef ENABLE_PLAYERBOTS
+#include "PlayerbotAIMethods.h"
+#endif //ENABLE_PLAYERBOTS
 #include "CreatureMethods.h"
 #include "GroupMethods.h"
 #include "GuildMethods.h"
@@ -56,6 +59,9 @@ luaL_Reg GlobalMethods[] =
     { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
     { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
     { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
+#ifdef ENABLE_PLAYERBOTS
+    { "RegisterPlayerbotAIEvent", &LuaGlobalFunctions::RegisterPlayerbotAIEvent },
+#endif //ENABLE_PLAYERBOTS
 
     { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
     { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
@@ -69,6 +75,9 @@ luaL_Reg GlobalMethods[] =
     { "ClearItemGossipEvents", &LuaGlobalFunctions::ClearItemGossipEvents },
     { "ClearPacketEvents", &LuaGlobalFunctions::ClearPacketEvents },
     { "ClearPlayerEvents", &LuaGlobalFunctions::ClearPlayerEvents },
+#ifdef ENABLE_PLAYERBOTS
+    { "ClearPlayerbotAIEvents", &LuaGlobalFunctions::ClearPlayerbotAIEvents },
+#endif //ENABLE_PLAYERBOTS
     { "ClearPlayerGossipEvents", &LuaGlobalFunctions::ClearPlayerGossipEvents },
     { "ClearServerEvents", &LuaGlobalFunctions::ClearServerEvents },
     { "ClearMapEvents", &LuaGlobalFunctions::ClearMapEvents },
@@ -765,6 +774,21 @@ ElunaRegister<Player> PlayerMethods[] =
     { NULL, NULL }
 };
 
+#ifdef ENABLE_PLAYERBOTS
+ElunaRegister<PlayerbotAI> PlayerbotAIMethods[] =
+{
+    // Getters
+    { "GetBot", &LuaPlayerbotAI::GetBot },
+    // Setters
+    // Boolean
+    { "HasTrigger", &LuaPlayerbotAI::HasTrigger },
+
+    // Other
+
+    { NULL, NULL }
+};
+#endif //ENABLE_PLAYERBOTS
+
 ElunaRegister<Creature> CreatureMethods[] =
 {
     // Getters
@@ -1378,6 +1402,9 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
     ElunaTemplate<Player>::SetMethods(E, UnitMethods);
     ElunaTemplate<Player>::SetMethods(E, PlayerMethods);
+
+    ElunaTemplate<PlayerbotAI>::Register(E, "PlayerbotAI");
+    ElunaTemplate<PlayerbotAI>::SetMethods(E, PlayerbotAIMethods);
 
     ElunaTemplate<Creature>::Register(E, "Creature");
     ElunaTemplate<Creature>::SetMethods(E, ObjectMethods);

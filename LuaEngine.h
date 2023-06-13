@@ -38,6 +38,9 @@
 #include "ElunaUtility.h"
 #include <mutex>
 #include <memory>
+#ifdef ENABLE_PLAYERBOTS
+#define PLAYERBOT_ELUNA
+#endif
 
 extern "C"
 {
@@ -113,6 +116,9 @@ class VehicleInfo;
 typedef VehicleInfo Vehicle;
 #endif
 #endif
+#endif
+#ifdef ENABLE_PLAYERBOTS
+class PlayerbotAI;
 #endif
 
 struct lua_State;
@@ -259,6 +265,9 @@ public:
 
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
+#ifdef ENABLE_PLAYERBOTS
+    BindingMap< EventKey<Hooks::PlayerbotAIEvents> >*  PlayerbotAIEventBindings;
+#endif //ENABLE_PLAYERBOTS
     BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
     BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
     BindingMap< EventKey<Hooks::VehicleEvents> >*    VehicleEventBindings;
@@ -486,6 +495,11 @@ public:
     void OnUpdateZone(Player* pPlayer, uint32 newZone, uint32 newArea);
     void OnMapChanged(Player* pPlayer);
     void HandleGossipSelectOption(Player* pPlayer, uint32 menuId, uint32 sender, uint32 action, const std::string& code);
+
+#ifdef ENABLE_PLAYERBOTS
+    /* PlayerbotAI*/
+    void OnUpdateAI(PlayerbotAI* pPlayer);
+#endif //ENABLE_PLAYERBOTS
 
 #ifndef CLASSIC
 #ifndef TBC
