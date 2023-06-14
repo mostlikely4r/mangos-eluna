@@ -579,6 +579,22 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+    static int RegisterStringHelper(lua_State* L, int regtype)
+    {
+        uint32 ev = Eluna::CHECKVAL<uint32>(L, 1);
+        std::string qualifier = Eluna::CHECKVAL<std::string>(L, 2);
+        luaL_checktype(L, 3, LUA_TFUNCTION);
+        uint32 shots = Eluna::CHECKVAL<uint32>(L, 4, 0);
+
+        lua_pushvalue(L, 3);
+        int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
+        if (functionRef >= 0)
+            return Eluna::GetEluna(L)->Register(L, regtype, 0, ObjectGuid(), 0, ev, functionRef, shots, qualifier);
+        else
+            luaL_argerror(L, 3, "unable to make a ref to function");
+        return 0;
+    }
+
     /**
      * Registers a server event handler.
      *

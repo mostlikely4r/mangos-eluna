@@ -130,6 +130,7 @@ template<typename K> class BindingMap;
 template<typename T> struct EventKey;
 template<typename T> struct EntryKey;
 template<typename T> struct UniqueObjectKey;
+template<typename T> struct StringKey;
 
 struct LuaScript
 {
@@ -358,7 +359,7 @@ public:
     bool IsEnabled() const { return enabled && IsInitialized(); }
     bool HasLuaState() const { return L != NULL; }
     uint64 GetCallstackId() const { return callstackid; }
-    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots);
+    int Register(lua_State* L, uint8 reg, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots, std::string qualifier = "");
 
     // Checks
     template<typename T> static T CHECKVAL(lua_State* luastate, int narg);

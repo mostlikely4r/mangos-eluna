@@ -261,6 +261,22 @@ struct UniqueObjectKey
     { }
 };
 
+/*
+ * A `BindingMap` key type for event ID/String bindings
+ *   (currently just PlayerbotAI).
+ */
+template <typename T>
+struct StringKey
+{
+    T event_id;
+    std::string qualifier;
+
+    StringKey(T event_id, std::string qualifier) :
+        event_id(event_id),
+        qualifier(qualifier)
+    { }
+};
+
 class hash_helper
 {
 public:
@@ -339,6 +355,16 @@ namespace std
     };
 
     template<typename T>
+    struct equal_to < StringKey<T> >
+    {
+        bool operator()(StringKey<T> const& lhs, StringKey<T> const& rhs) const
+        {
+            return lhs.event_id == rhs.event_id
+                && (lhs.qualifier.empty() || rhs.qualifier.empty() || lhs.qualifier == rhs.qualifier);
+        }
+    };
+
+    template<typename T>
     struct hash < EventKey<T> >
     {
         typedef EventKey<T> argument_type;
@@ -368,6 +394,17 @@ namespace std
         hash_helper::result_type operator()(argument_type const& k) const
         {
             return hash_helper::hash(k.event_id, k.instance_id, k.guid.GetRawValue());
+        }
+    };
+
+    template<typename T>
+    struct hash < StringKey<T> >
+    {
+        typedef StringKey<T> argument_type;
+
+        hash_helper::result_type operator()(argument_type const& k) const
+        {
+            return hash_helper::hash(k.event_id, k.qualifier);
         }
     };
 }

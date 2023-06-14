@@ -948,7 +948,7 @@ static void createCancelCallback(lua_State* L, uint64 bindingID, BindingMap<K>* 
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+int Eluna::Register(lua_State* L, uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots, std::string qualifier)
 {
     uint64 bindingID;
 
