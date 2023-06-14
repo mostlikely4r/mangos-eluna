@@ -28,23 +28,34 @@ namespace LuaPlayerbotAI
     }
 
     /**
-     * Returns 'true' if the [Player] has an active [Quest] by specific ID, 'false' otherwise.
+     * Returns 'true' if the trigger condition is currently true for [PlayerbotAI].
      *
-     * @param string triggerName
-     * @return bool hasTrigger
+     * @param string trigger
+     * @return bool trigger active
      */
-    int HasTrigger(lua_State* L, PlayerbotAI* ai)
+    int IsTriggerActive(lua_State* L, PlayerbotAI* ai)
     {
-        std::string triggerName = Eluna::CHECKVAL<std::string>(L, 2);
-
-        bool hasTrigger = false;
+        std::string trigger = Eluna::CHECKVAL<std::string>(L, 2);
 
         AiObjectContext* context = ai->GetAiObjectContext();
 
-        if (AI_VALUE2(bool, "trigger active", triggerName))
-            hasTrigger = true;
-              
-            Eluna::Push(L, hasTrigger);
+        Eluna::Push(L, AI_VALUE2(bool, "trigger active", trigger));
+        return 1;
+    }
+
+    /**
+     * Returns the specified boolean value for [PlayerbotAI]
+     *
+     * @param string value
+     * @return bool hasTrigger
+     */
+    int BoolValue(lua_State* L, PlayerbotAI* ai)
+    {
+        std::string value = Eluna::CHECKVAL<std::string>(L, 2);
+
+        AiObjectContext* context = ai->GetAiObjectContext();
+
+        Eluna::Push(L, AI_VALUE(bool, value));
         return 1;
     }
 }
