@@ -14,26 +14,44 @@
 
 using namespace Hooks;
 
-#define START_HOOK(EVENT) \
+#define START_HOOK(EVENT, QUALIFIER) \
     if (!IsEnabled())\
         return;\
-    auto key = EventKey<PlayerbotAIEvents>(EVENT);\
+    auto key = StringKey<PlayerbotAIEvents>(EVENT, QUALIFIER);\
     if (!PlayerbotAIEventBindings->HasBindingsFor(key))\
         return;\
     LOCK_ELUNA
 
-#define START_HOOK_WITH_RETVAL(EVENT, RETVAL) \
+#define START_HOOK_WITH_RETVAL(EVENT, QUALIFIER, RETVAL) \
     if (!IsEnabled())\
         return RETVAL;\
-    auto key = EventKey<PlayerbotAIEvents>(EVENT);\
+    auto key = String<PlayerbotAIEvents>(EVENT, QUALIFIER);\
     if (!PlayerbotAIEventBindings->HasBindingsFor(key))\
         return RETVAL;\
     LOCK_ELUNA
 
-void Eluna::OnUpdateAI(PlayerbotAI * ai)
+void Eluna::OnUpdateAI(PlayerbotAI * ai, std::string botName)
 {
-    START_HOOK(PLAYERBOTAI_EVENT_ON_UPDATE_AI);
+    START_HOOK(PLAYERBOTAI_EVENT_ON_UPDATE_AI, botName);
     Push(ai);
+    CallAllFunctions(PlayerbotAIEventBindings, key);
+}
+
+void Eluna::OnTriggerCheck(PlayerbotAI* ai, std::string trigger, bool enabled)
+{
+    START_HOOK(PLAYERBOTAI_EVENT_ON_TRIGGER_CHECK, trigger);
+    Push(ai);
+    Push(trigger);
+    Push(enabled);
+    CallAllFunctions(PlayerbotAIEventBindings, key);
+}
+
+void Eluna::OnActionExecute(PlayerbotAI* ai, std::string action, bool success)
+{
+    START_HOOK(PLAYERBOTAI_EVENT_ON_ACTION_EXECUTE, action);
+    Push(ai);
+    Push(action);
+    Push(success);
     CallAllFunctions(PlayerbotAIEventBindings, key);
 }
 #endif //ENABLE_PLAYERBOTS

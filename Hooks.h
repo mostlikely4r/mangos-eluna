@@ -214,7 +214,9 @@ namespace Hooks
 #ifdef ENABLE_PLAYERBOTS
     enum PlayerbotAIEvents
     {
-        PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,        // (event, player)
+        PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,                    // (event, ai)                              Qualifier: Bot name
+        PLAYERBOTAI_EVENT_ON_TRIGGER_CHECK = 2,                // (event, ai, trigger, triggered)          Qualifier: Trigger
+        PLAYERBOTAI_EVENT_ON_ACTION_EXECUTE = 3,               // (event, ai, action, executed)            Qualifier: Action
 
         PLAYERBOTAI_EVENT_COUNT
     };

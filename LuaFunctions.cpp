@@ -1403,10 +1403,10 @@ void RegisterFunctions(Eluna* E)
     ElunaTemplate<Player>::SetMethods(E, WorldObjectMethods);
     ElunaTemplate<Player>::SetMethods(E, UnitMethods);
     ElunaTemplate<Player>::SetMethods(E, PlayerMethods);
-
+#ifdef ENABLE_PLAYERBOTS
     ElunaTemplate<PlayerbotAI>::Register(E, "PlayerbotAI");
     ElunaTemplate<PlayerbotAI>::SetMethods(E, PlayerbotAIMethods);
-
+#endif //ENABLE_PLAYERBOTS
     ElunaTemplate<Creature>::Register(E, "Creature");
     ElunaTemplate<Creature>::SetMethods(E, ObjectMethods);
     ElunaTemplate<Creature>::SetMethods(E, WorldObjectMethods);

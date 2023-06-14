@@ -744,7 +744,9 @@ namespace LuaGlobalFunctions
       * <pre>
       * enum PlayerEvents
       * {
-      *     PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,        // (event, player)   
+        PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,                    // (event, ai)                              Qualifier: Bot name
+        PLAYERBOTAI_EVENT_ON_TRIGGER_CHECK = 2,                // (event, ai, trigger, triggered)          Qualifier: Trigger
+        PLAYERBOTAI_EVENT_ON_ACTION_EXECUTE = 3,               // (event, ai, action, executed)            Qualifier: Action
       * };
       * </pre>
       *
@@ -752,6 +754,7 @@ namespace LuaGlobalFunctions
       * @proto cancel = (event, function, shots)
       *
       * @param uint32 event : [PlayerbotAI] event Id, refer to PlayerbotAIEvents above
+      * @param string qualifier : specifier what to pick up. Refer to qualifier above. Empty is select all.
       * @param function function : function to register
       * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
       *
@@ -759,7 +762,7 @@ namespace LuaGlobalFunctions
       */
     int RegisterPlayerbotAIEvent(lua_State* L)
     {
-        return RegisterEventHelper(L, Hooks::REGTYPE_PLAYERBOTAI);
+        return RegisterStringHelper(L, Hooks::REGTYPE_PLAYERBOTAI);
     }
 #endif //ENABLE_PLAYERBOTS
 
@@ -3196,7 +3199,7 @@ namespace LuaGlobalFunctions
      */
     int ClearPlayerbotAIEvents(lua_State* L)
     {
-        typedef EventKey<Hooks::PlayerbotAIEvents> Key;
+        typedef StringKey<Hooks::PlayerbotAIEvents> Key;
 
         if (lua_isnoneornil(L, 1))
         {
@@ -3205,7 +3208,8 @@ namespace LuaGlobalFunctions
         else
         {
             uint32 event_type = Eluna::CHECKVAL<uint32>(L, 1);
-            Eluna::GetEluna(L)->PlayerbotAIEventBindings->Clear(Key((Hooks::PlayerbotAIEvents)event_type));
+            std::string qualifier = Eluna::CHECKVAL<std::string>(L, 2);
+            Eluna::GetEluna(L)->PlayerbotAIEventBindings->Clear(Key((Hooks::PlayerbotAIEvents)event_type, qualifier));
         }
         return 0;
     }

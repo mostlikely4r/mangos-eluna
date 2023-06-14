@@ -267,7 +267,7 @@ public:
     BindingMap< EventKey<Hooks::ServerEvents> >*     ServerEventBindings;
     BindingMap< EventKey<Hooks::PlayerEvents> >*     PlayerEventBindings;
 #ifdef ENABLE_PLAYERBOTS
-    BindingMap< EventKey<Hooks::PlayerbotAIEvents> >*  PlayerbotAIEventBindings;
+    BindingMap< StringKey<Hooks::PlayerbotAIEvents> >*  PlayerbotAIEventBindings;
 #endif //ENABLE_PLAYERBOTS
     BindingMap< EventKey<Hooks::GuildEvents> >*      GuildEventBindings;
     BindingMap< EventKey<Hooks::GroupEvents> >*      GroupEventBindings;
@@ -499,7 +499,9 @@ public:
 
 #ifdef ENABLE_PLAYERBOTS
     /* PlayerbotAI*/
-    void OnUpdateAI(PlayerbotAI* pPlayer);
+    void OnUpdateAI(PlayerbotAI* pPlayer, std::string botName);
+    void OnTriggerCheck(PlayerbotAI* ai, std::string triggerName, bool enabled);
+    void OnActionExecute(PlayerbotAI* ai, std::string action, bool success);
 #endif //ENABLE_PLAYERBOTS
 
 #ifndef CLASSIC
