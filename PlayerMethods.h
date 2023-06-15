@@ -317,6 +317,19 @@ namespace LuaPlayer
     }
 #endif
 
+#ifdef ENABLE_PLAYERBOTS
+    /**
+     * Returns [PlayerbotAI]
+     *
+     * @return int32 standingPos
+     */
+    int GetPlayerbotAI(lua_State* L, Player* player)
+    {
+        Eluna::Push(L, player->GetPlayerbotAI());
+        return 1;
+    }
+#endif //ENABLE_PLAYERBOTS
+
     /**
      * Returns 'true' if the [Player] is currently in water, 'false' otherwise.
      *

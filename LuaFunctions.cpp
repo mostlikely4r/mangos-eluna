@@ -535,6 +535,9 @@ ElunaRegister<Player> PlayerMethods[] =
     { "GetRankPoints", &LuaPlayer::GetRankPoints },
     { "GetHonorLastWeekStandingPos", &LuaPlayer::GetHonorLastWeekStandingPos },
 #endif
+#ifdef ENABLE_PLAYERBOTS
+    { "GetPlayerbotAI", &LuaPlayer::GetPlayerbotAI },
+#endif //ENABLE_PLAYERBOTS
 
     // Setters
     { "AdvanceSkillsToMax", &LuaPlayer::AdvanceSkillsToMax },
