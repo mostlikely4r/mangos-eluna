@@ -783,12 +783,13 @@ ElunaRegister<PlayerbotAI> PlayerbotAIMethods[] =
     // Getters
     { "GetBot", &LuaPlayerbotAI::GetBot },
     { "GetMaster", &LuaPlayerbotAI::GetMaster },
+    { "GetAIValue", &LuaPlayerbotAI::GetAIValue },
     // Setters
     // Boolean
     { "IsTriggerActive", &LuaPlayerbotAI::IsTriggerActive },
-    { "BoolValue", &LuaPlayerbotAI::BoolValue },
 
-    // Other
+    // ExecuteCommand
+    { "ExecuteCommand", &LuaPlayerbotAI::ExecuteCommand },
 
     { NULL, NULL }
 };
