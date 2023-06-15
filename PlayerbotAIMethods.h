@@ -28,6 +28,17 @@ namespace LuaPlayerbotAI
     }
 
     /**
+     * Returns [PlayerbotAI]s master [Player] object
+     *
+     * @return [Player] player
+     */
+    int GetMaster(lua_State* L, PlayerbotAI* ai)
+    {
+        Eluna::Push(L, ai->GetMaster());
+        return 1;
+    }
+
+    /**
      * Returns 'true' if the trigger condition is currently true for [PlayerbotAI].
      *
      * @param string trigger
