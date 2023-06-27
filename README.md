@@ -39,7 +39,8 @@ Core sources and forks with required modifications for Eluna:
 
 [Official MaNGOS Zero with Eluna](https://github.com/mangoszero/server)  
 [Official MaNGOS One with Eluna](https://github.com/mangosone/server)  
-[Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)
+[Official MaNGOS Two with Eluna](https://github.com/mangostwo/server)  
+[Official MaNGOS Three with Eluna](https://github.com/mangosthree/server)  
 
 [Eluna cMaNGOS Classic](https://github.com/Niam5/Eluna-CMaNGOS-Classic) - maintained by [Niam5](https://github.com/Niam5)  
 [Eluna cMaNGOS TBC](https://github.com/Niam5/Eluna-CMaNGOS-TBC) - maintained by [Niam5](https://github.com/Niam5)  
