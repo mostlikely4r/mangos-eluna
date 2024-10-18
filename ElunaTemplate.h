@@ -68,6 +68,9 @@ ElunaConstrainedObjectRef<Map> GetWeakPtrFor(Map const* obj);
 ElunaConstrainedObjectRef<Object> GetWeakPtrForObjectImpl(Object const* obj);
 ElunaConstrainedObjectRef<Quest> GetWeakPtrFor(Quest const* obj);
 ElunaConstrainedObjectRef<Spell> GetWeakPtrFor(Spell const* obj);
+#ifdef ENABLE_PLAYERBOTS
+ElunaConstrainedObjectRef<PlayerbotAI> GetWeakPtrFor(PlayerbotAI const* obj);
+#endif //ENABLE_PLAYERBOTS
 #if ELUNA_EXPANSION >= EXP_WOTLK
 ElunaConstrainedObjectRef<Vehicle> GetWeakPtrFor(Vehicle const* obj);
 #endif

@@ -600,6 +600,23 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#ifdef ENABLE_PLAYERBOTS
+    static int RegisterStringHelper(Eluna* E, int regtype)
+    {
+        uint32 ev = E->CHECKVAL<uint32>(1);
+        std::string qualifier = E->CHECKVAL<std::string>(2);
+        luaL_checktype(E->L, 3, LUA_TFUNCTION);
+        uint32 shots = E->CHECKVAL<uint32>(4, 0);
+        lua_pushvalue(E->L, 3);
+        int functionRef = luaL_ref(E->L, LUA_REGISTRYINDEX);
+        if (functionRef >= 0)
+            return E->Register(regtype, 0, ObjectGuid(), 0, ev, functionRef, shots, qualifier);
+        else
+            luaL_argerror(E->L, 3, "unable to make a ref to function");
+        return 0;
+    }
+#endif //ENABLE_PLAYERBOTS
+
     /**
      * Registers a server event handler.
      *
@@ -753,6 +770,35 @@ namespace LuaGlobalFunctions
     {
         return RegisterEventHelper(E, Hooks::REGTYPE_PLAYER);
     }
+
+#ifdef ENABLE_PLAYERBOTS
+    /**
+      * Registers a [PlayerbotAI] event handler.
+      *
+      * <pre>
+      * enum PlayerbotAIEvents
+      * {
+      * PLAYERBOTAI_EVENT_ON_UPDATE_AI = 1,                    // (event, ai)                              Qualifier: Bot name
+      * PLAYERBOTAI_EVENT_ON_TRIGGER_CHECK = 2,                // (event, ai, trigger, triggered)          Qualifier: Trigger
+      * PLAYERBOTAI_EVENT_ON_ACTION_EXECUTE = 3,               // (event, ai, action, executed)            Qualifier: Action
+      * };
+      * </pre>
+      *
+      * @proto cancel = (event, function)
+      * @proto cancel = (event, function, shots)
+      *
+      * @param uint32 event : [PlayerbotAI] event Id, refer to PlayerbotAIEvents above
+      * @param string qualifier : specifier what to pick up. Refer to qualifier above. Empty is select all.* 
+      * @param function function : function to register
+      * @param uint32 shots = 0 : the number of times the function will be called, 0 means "always call this function"
+      *
+      * @return function cancel : a function that cancels the binding when called
+      */
+    int RegisterPlayerbotAIEvent(Eluna* E)
+    {
+        return RegisterStringHelper(E, Hooks::REGTYPE_PLAYERBOTAI);
+    }
+#endif //ENABLE_PLAYERBOTS
 
     /**
      * Registers a [Guild] event handler.
@@ -3047,6 +3093,35 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#ifdef ENABLE_PLAYERBOTS
+    /**
+     * Unbinds event handlers for either all [PlayerbotAI] events, or one type of [PlayerbotAI] event.
+     *
+     * If `event_type` is `nil`, all [PlayerbotAI] event handlers are cleared.
+     *
+     * Otherwise, only event handlers for `event_type` are cleared.
+     *
+     * @proto ()
+     * @proto (event_type)
+     * @param uint32 event_type : the event whose handlers will be cleared, see [Global:RegisterPlayerbotAIEvent]
+     */
+    int ClearPlayerbotAIEvents(Eluna* E)
+    {
+        typedef StringKey<Hooks::PlayerbotAIEvents> Key;
+        if (lua_isnoneornil(E->L, 1))
+        {
+            E->PlayerbotAIEventBindings->Clear();
+        }
+        else
+        {
+            uint32 event_type = E->CHECKVAL<uint32>(1);
+            std::string qualifier = E->CHECKVAL<std::string>(2);
+            E->PlayerbotAIEventBindings->Clear(Key((Hooks::PlayerbotAIEvents)event_type, qualifier));
+        }
+        return 0;
+    }
+#endif //ENABLE_PLAYERBOTS
+
     /**
      * Unbinds event handlers for either all of a [Player]'s gossip events, or one type of event.
      *
@@ -3191,6 +3266,9 @@ namespace LuaGlobalFunctions
         { "RegisterBGEvent", &LuaGlobalFunctions::RegisterBGEvent },
         { "RegisterMapEvent", &LuaGlobalFunctions::RegisterMapEvent },
         { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
+        #ifdef ENABLE_PLAYERBOTS
+        { "RegisterPlayerbotAIEvent", &LuaGlobalFunctions::RegisterPlayerbotAIEvent },
+        #endif //ENABLE_PLAYERBOTS
 
         { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
         { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },

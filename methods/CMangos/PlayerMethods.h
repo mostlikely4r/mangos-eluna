@@ -3733,6 +3733,19 @@ namespace LuaPlayer
         return 0;
     }
 #endif
+
+#ifdef ENABLE_PLAYERBOTS
+    /**
+     * Returns [PlayerbotAI]
+     *
+     * @return int32 standingPos
+     */
+    int GetPlayerbotAI(Eluna* E, Player* player)
+    {
+        E->Push(player->GetPlayerbotAI());
+        return 1;
+    }
+#endif //ENABLE_PLAYERBOTS
     
     ElunaRegister<Player> PlayerMethods[] =
     {
@@ -4028,6 +4041,9 @@ namespace LuaPlayer
         { "ResetAchievements", METHOD_REG_NONE },
         { "SendMovieStart", METHOD_REG_NONE },
 #endif
+#ifdef ENABLE_PLAYERBOTS
+        { "GetPlayerbotAI", &LuaPlayer::GetPlayerbotAI },
+#endif //ENABLE_PLAYERBOTS
         // Not implemented methods
         { "GetChampioningFaction", METHOD_REG_NONE }, // ACore & TC only
         { "GetRecruiterId", METHOD_REG_NONE }, // not implemented

@@ -57,6 +57,9 @@ eventMgr(NULL),
 
 ServerEventBindings(NULL),
 PlayerEventBindings(NULL),
+#ifdef ENABLE_PLAYERBOTS
+PlayerbotAIEventBindings(NULL),
+#endif //ENABLE_PLAYERBOTS
 GuildEventBindings(NULL),
 GroupEventBindings(NULL),
 VehicleEventBindings(NULL),
@@ -186,6 +189,9 @@ void Eluna::CreateBindStores()
 
     ServerEventBindings      = new BindingMap< EventKey<Hooks::ServerEvents> >(L);
     PlayerEventBindings      = new BindingMap< EventKey<Hooks::PlayerEvents> >(L);
+#ifdef ENABLE_PLAYERBOTS
+    PlayerbotAIEventBindings = new BindingMap< StringKey<Hooks::PlayerbotAIEvents> >(L);
+#endif
     GuildEventBindings       = new BindingMap< EventKey<Hooks::GuildEvents> >(L);
     GroupEventBindings       = new BindingMap< EventKey<Hooks::GroupEvents> >(L);
     VehicleEventBindings     = new BindingMap< EventKey<Hooks::VehicleEvents> >(L);
@@ -210,6 +216,9 @@ void Eluna::DestroyBindStores()
 {
     delete ServerEventBindings;
     delete PlayerEventBindings;
+#ifdef ENABLE_PLAYERBOTS
+    delete PlayerbotAIEventBindings;
+#endif
     delete GuildEventBindings;
     delete GroupEventBindings;
     delete VehicleEventBindings;
@@ -231,6 +240,9 @@ void Eluna::DestroyBindStores()
 
     ServerEventBindings = NULL;
     PlayerEventBindings = NULL;
+#ifdef ENABLE_PLAYERBOTS
+    PlayerbotAIEventBindings = NULL;
+#endif //ENABLE_PLAYERBOTS
     GuildEventBindings = NULL;
     GroupEventBindings = NULL;
     VehicleEventBindings = NULL;
@@ -729,7 +741,11 @@ static void createCancelCallback(Eluna* e, uint64 bindingID, BindingMap<K>* bind
 }
 
 // Saves the function reference ID given to the register type's store for given entry under the given event
-int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots)
+int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanceId, uint32 event_id, int functionRef, uint32 shots
+#ifdef ENABLE_PLAYERBOTS
+    , std::string qualifier
+#endif //ENABLE_PLAYERBOTS
+)
 {
     uint64 bindingID;
 
@@ -764,6 +780,17 @@ int Eluna::Register(uint8 regtype, uint32 entry, ObjectGuid guid, uint32 instanc
                 return 1; // Stack: callback
             }
             break;
+#ifdef ENABLE_PLAYERBOTS
+        case Hooks::REGTYPE_PLAYERBOTAI:
+            if (event_id < Hooks::PLAYERBOTAI_EVENT_COUNT)
+            {
+                auto key = StringKey<Hooks::PlayerbotAIEvents>((Hooks::PlayerbotAIEvents)event_id, qualifier);
+                bindingID = PlayerbotAIEventBindings->Insert(key, functionRef, shots);
+                createCancelCallback(this, bindingID, PlayerbotAIEventBindings);
+                return 1; // Stack: callback
+            }
+            break;
+#endif
 
         case Hooks::REGTYPE_GROUP:
             if (event_id < Hooks::GROUP_EVENT_COUNT)
